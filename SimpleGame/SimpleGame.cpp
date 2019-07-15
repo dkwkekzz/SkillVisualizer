@@ -19,6 +19,14 @@ int main()
 	archer player;
 	queue<monster> monque;
 
+	Suite::Module::Infra::NTime::NAlarm::Alarm alarm;
+
+	Suite::Game::Function::NTimer::BuffPackage inst;
+
+	alarm.Regist(&inst, nullptr, 0);
+
+	inst.OnAlarm(999);
+
 	int universal = true;
 	std::thread world1([&]() {
 		monster m1(2);
@@ -26,17 +34,15 @@ int main()
 		a1.none();
 		while (universal)
 		{
-			m1.defence(a1.attack());
-			a1.defence(m1.attack());
-			a1.heal(1);
+			//m1.defence(a1.attack());
+			//a1.defence(m1.attack());
+			//a1.heal(1);
 	
-			this_thread::sleep_for(1ms);
+			alarm.OnTick();
+
+			this_thread::sleep_for(10ms);
 		}
 	});
-
-	Suite::Module::Infra::NTime::NAlarm::Alarm alarm;
-	
-	alarm.Regist(nullptr, nullptr, 0);
 
 	std::thread world2([&]() {
 		monster m1(2);
@@ -45,13 +51,13 @@ int main()
 	
 		while (universal)
 		{
-			alarm.Regist(nullptr, nullptr, 0);
+			alarm.Regist(&inst, nullptr, 0);
 
-			m1.defence(a1.attack());
-			a1.defence(m1.attack());
-			a1.heal(1);
+			//m1.defence(a1.attack());
+			//a1.defence(m1.attack());
+			//a1.heal(1);
 	
-			this_thread::sleep_for(1000ms);
+			this_thread::sleep_for(100ms);
 		}
 	});
 
@@ -131,7 +137,7 @@ int main()
 		}
 	}
 
-	universal = false;
+	//universal = false;
 	world1.join();
 	world2.join();
 

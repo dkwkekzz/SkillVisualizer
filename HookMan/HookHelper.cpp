@@ -30,15 +30,25 @@ void* GetOriginal(void * p)
 
 void ProcEnter(void* pa, void* pth)
 {
-	const auto & iter = linkMap.find(pth);
-	if (iter != linkMap.end())
+	FunctionData fdata;
+	FindFunction(pa, fdata);
+	if (fdata.sort == FunctionSort::Alarm)
 	{
-		linkMap.erase(iter);
+		const auto & iter = linkMap.find(pth);
+		if (iter != linkMap.end())
+		{	// if linked, enter
+			linkMap.erase(iter);
+			EnterSymbol(fdata.name);
+		}
+		else
+		{
+			EnterSymbol(NULL);
+		}
 	}
-
-	const char* szCallee = NULL;
-	FindFunction(pa, szCallee);
-	EnterSymbol(szCallee);
+	else
+	{
+		EnterSymbol(fdata.name);
+	}
 }
 
 void ProcExit(unsigned long long ret)
@@ -113,12 +123,19 @@ void Release()
 //
 
 void* GetAlarmRegist(void * pth, void * pob)
-{
+{	// 테스트환경에서 실제 객체를 집어넣어보고, 
+	// 알람을 호출해서
+	// 적절하게 연결되는지를 확인해야 한다.
 	const char* callee = CurrentSymbol();
 	std::cout << "GetAlarmRegist from: " << callee << std::endl;
 
 	linkMap.emplace(pob, callee);
 	return hkAlarmRegist->GetOriginal<void*>();
+}
+
+bool IsSpecialized(const wchar_t* src)
+{
+	return wcsstr(src, L"Suite::Module::Infra::NTime::NAlarm::Alarm::Regist");
 }
 
 void CollectSpecialized(std::wostream& ofile)
@@ -224,6 +241,11 @@ void RangeHookByAddr(std::wostream& ofile, const std::vector<uint64_t> & listPtr
 			continue;
 		}
 
+		if (IsSpecialized(listFunc[i].c_str()))
+		{
+			ofile << "[RangeHookByAddr][Warning] pass for specialized: " << (listFunc[i]) << std::endl;
+			continue;
+		}
 		//BOOL bResult = SymFromNameW(GetCurrentProcess(), listFunc[i].c_str(), pSymbolInfo);
 		//if (FALSE == bResult)
 		//{

@@ -1,14 +1,22 @@
 #pragma once
-using CUINT64 = const unsigned long long;
-using CINT64 = const long long;
-using CULONG = const unsigned long;
-using CBOOL = const bool;
+namespace Suite
+{
+	using CUINT64 = const unsigned long long;
+	using CINT64 = const long long;
+	using CULONG = const unsigned long;
+	using CBOOL = const bool;
+	using CCHAR = const char;
+
+	class IObserver
+	{
+	public:
+		virtual ~IObserver() {}
+		virtual void			OnAlarm(CUINT64 ullTick) = 0;
+		virtual void			OnCancel(CUINT64 ullTick) = 0;
+	};
+}
 
 class Task
-{
-};
-
-class IObserver
 {
 };
 
@@ -27,6 +35,8 @@ namespace NTime { namespace NAlarm {
 class Alarm
 {
 public:
+	Alarm();
+
 	const Handle			Regist( IObserver * pObserver, IValue * pValue, CUINT64 ullTick, CBOOL skipLog = FALSE );
 	const Handle			Regist( IObserver * pObserver, IValue * pValue, CUINT64 ullTick, Task * task, CBOOL skipLog = FALSE );
 	void					Cancel( const Handle & stHandle, CCHAR * szFileLocation );
@@ -50,3 +60,21 @@ private:
 
 } /* NAlarm */ } /* NTime */
 } /* Infra */ } /* Module */ } /* Suite */
+
+namespace Suite { namespace Game { namespace Function {
+namespace NTimer {
+
+class BuffPackage : public IObserver
+{
+public:
+	virtual void			OnAlarm( CUINT64 ullTick );
+	virtual void			OnCancel( CUINT64 ullTick );
+
+private:
+	struct					Private;
+	Private *				This;
+
+};
+
+} /* NTimer */
+} /* Function */ } /* Game */ } /* Suite */

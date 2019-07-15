@@ -1,0 +1,6 @@
+isconstructor,,false,1
+contains,std::,false,2
+contains,',false,3
+startwith,public: ,true,4
+startwith,protected: ,true,4
+startwith,private: ,true,4

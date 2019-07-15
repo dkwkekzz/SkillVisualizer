@@ -31,7 +31,7 @@ const char*
 CallMonitor::Top()
 {
 	if (m_stSym.empty())
-		return nullptr;
+		return "empty";
 	return m_stSym.top();
 }
 
@@ -72,6 +72,12 @@ CallMonitor
 void
 CallMonitor::Push( MonitorOption op, const char* szCallee )
 {
+	if (NULL == szCallee)
+	{
+		m_stSym.push(NULL);
+		return;
+	}
+
 	MonitorContext ctx;
 	strcpy(ctx.callee, szCallee);
 	ctx.level = m_stSym.size();
@@ -97,6 +103,9 @@ CallMonitor::Pop(MonitorOption op, UINT64 ret)
 
 	auto * pCallee = m_stSym.top();
 	m_stSym.pop();
+
+	if (NULL == pCallee)
+		return;
 
 	MonitorContext ctx;
 	strcpy(ctx.callee, pCallee);

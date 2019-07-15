@@ -1,4 +1,5 @@
 ﻿// dllmain.cpp : DLL 응용 프로그램의 진입점을 정의합니다.
+#define PLH_HIDE_DEBUG_MESSAGES 1
 #include "stdafx.h"
 #include "HookHelper.h"
 #include <iostream>

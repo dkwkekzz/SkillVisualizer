@@ -8,12 +8,20 @@ namespace NTime { namespace NAlarm {
 struct Alarm::Private
 {
 	const char* name = "private::alarm";
+	UINT64 tick = 0;
+	IObserver * ob;
 };
+
+Alarm::Alarm()
+{
+	This = new Alarm::Private;
+}
 
 const Handle
 Alarm::Regist( IObserver * pObserver, IValue * pValue, CUINT64 ullTick, CBOOL skipLog )
 {
 	std::cout << "@@Regist" << std::endl;
+	This->ob = pObserver;
 	return Handle();
 }
 
@@ -54,7 +62,11 @@ Alarm::Cancel( const Handle & stHandle, CCHAR * szFileLocation )
 void
 Alarm::OnTick()
 {
-	std::cout << "OnTick" << std::endl;
+	if (This->ob)
+	{
+		This->ob->OnAlarm(This->tick += 10);
+		This->ob = nullptr;
+	}
 }
 
 void
@@ -85,3 +97,23 @@ Alarm::GetPostListCount()
 
 } /* NAlarm */ } /* NTime */
 } /* Infra */ } /* Module */ } /* Suite */
+
+namespace Suite { namespace Game { namespace Function {
+namespace NTimer {
+
+void
+BuffPackage::OnAlarm( CUINT64 ullTick )
+{
+	std::cout << "@@BuffPackage::OnAlarm1" << std::endl;
+	std::cout << "@@BuffPackage::OnAlarm2" << std::endl;
+	std::cout << "@@BuffPackage::OnAlarm3" << std::endl;
+}
+
+void
+BuffPackage::OnCancel( CUINT64 ullTick )
+{
+	std::cout << "@@OnCancel" << std::endl;
+}
+
+} /* NTimer */
+} /* Function */ } /* Game */ } /* Suite */

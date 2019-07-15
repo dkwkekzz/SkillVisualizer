@@ -17,7 +17,7 @@ static DWORD64  dwBaseAddr = 0;
 
 //Symbol Cache
 static CRITICAL_SECTION csProfileInfo;
-static std::map<void*, const char*> cached;
+static std::map<void*, FunctionData> cached;
 
 //*********************************************************************************************
 void SplitPath(char* dest, const char* src)
@@ -164,15 +164,15 @@ void InitSymbols(void* pAddress )
 }
 
 //*********************************************************************************************
-void FindFunction(void* pa, const char* &szFuncName )
+void FindFunction(void* pa, FunctionData & stFuncData )
 {
 	// CriticalSection
 	::EnterCriticalSection(&csProfileInfo);
 
-	std::map<void*, const char*>::iterator iter = cached.find(pa);
+	std::map<void*, FunctionData>::iterator iter = cached.find(pa);
 	if (iter != cached.end())
 	{
-		szFuncName = (*iter).second;
+		stFuncData = (*iter).second;
 		return;
 	}
 
@@ -218,11 +218,22 @@ void FindFunction(void* pa, const char* &szFuncName )
 				else
 				{
 					strcpy_s(undName,pSymbolInfo->Name);
-					char* funcName = new char [ strlen(undName) + 2 ];
-					strcpy_s(funcName, strlen(undName) + 1, undName);
 
-					cached.emplace(pa, funcName);
-					szFuncName = cached[pa];
+					FunctionData fdata;
+					fdata.name = new char [ strlen(undName) + 2 ];
+					strcpy_s(fdata.name, strlen(undName) + 1, undName);
+
+					if (strstr(fdata.name, "::OnAlarm"))
+					{
+						fdata.sort = FunctionSort::Alarm;
+					}
+					else
+					{
+						fdata.sort = FunctionSort::Default;
+					}
+
+					cached.emplace(pa, fdata);
+					stFuncData = cached[pa];
 				}
 			}
 

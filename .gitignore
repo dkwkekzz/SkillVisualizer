@@ -12,7 +12,6 @@ ipch/
 *.dat
 *.user
 *.opensdf
-*.txt
 *.obj
 *.lib
 *.log
