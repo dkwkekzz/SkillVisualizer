@@ -28,4 +28,3 @@ applicationhost.config
 *.ib_tag
 *.cache
 .vs/*
-SkillVisualizer.sln
