@@ -1,0 +1,82 @@
+[Enter] powerworld::archer::archer
+[Leave] powerworld::archer::archer	->	589911291976
+[Enter] powerworld::monster::monster
+[Leave] powerworld::monster::monster	->	589911292440
+[Enter] powerworld::archer::attack
+	[Enter] powerworld::archer::getCombat
+	[Leave] powerworld::archer::getCombat	->	10
+	[Enter] powerworld::archer::getHealth
+	[Leave] powerworld::archer::getHealth	->	1000
+[Leave] powerworld::archer::attack	->	10
+[Enter] powerworld::monster::defence
+	[Enter] powerworld::monster::getHealth
+	[Leave] powerworld::monster::getHealth	->	100
+[Leave] powerworld::monster::defence	->	1
+[Enter] powerworld::monster::attack
+	[Enter] powerworld::monster::getCombat
+	[Leave] powerworld::monster::getCombat	->	11
+	[Enter] powerworld::monster::getHealth
+	[Leave] powerworld::monster::getHealth	->	100
+[Leave] powerworld::monster::attack	->	11
+[Enter] powerworld::archer::defence
+	[Enter] powerworld::archer::getHealth
+	[Leave] powerworld::archer::getHealth	->	989
+[Leave] powerworld::archer::defence	->	769
+[Enter] powerworld::archer::heal
+	[Enter] powerworld::archer::getCombat
+	[Leave] powerworld::archer::getCombat	->	10
+[Leave] powerworld::archer::heal	->	1089
+[Enter] powerworld::monster::attack
+	[Enter] powerworld::monster::getCombat
+	[Leave] powerworld::monster::getCombat	->	11
+	[Enter] powerworld::monster::getHealth
+	[Leave] powerworld::monster::getHealth	->	100
+[Leave] powerworld::monster::attack	->	11
+[Enter] powerworld::archer::defence
+	[Enter] powerworld::archer::getHealth
+	[Leave] powerworld::archer::getHealth	->	1078
+[Leave] powerworld::archer::defence	->	1025
+[Enter] powerworld::monster::monster
+[Leave] powerworld::monster::monster	->	589911292440
+[Enter] powerworld::archer::attack
+	[Enter] powerworld::archer::getCombat
+	[Leave] powerworld::archer::getCombat	->	10
+	[Enter] powerworld::archer::getHealth
+	[Leave] powerworld::archer::getHealth	->	1078
+[Leave] powerworld::archer::attack	->	10
+[Enter] powerworld::monster::defence
+	[Enter] powerworld::monster::getHealth
+	[Leave] powerworld::monster::getHealth	->	90
+[Leave] powerworld::monster::defence	->	1
+[Enter] powerworld::monster::attack
+	[Enter] powerworld::monster::getCombat
+	[Leave] powerworld::monster::getCombat	->	11
+	[Enter] powerworld::monster::getHealth
+	[Leave] powerworld::monster::getHealth	->	90
+[Leave] powerworld::monster::attack	->	11
+[Enter] powerworld::archer::defence
+	[Enter] powerworld::archer::getHealth
+	[Leave] powerworld::archer::getHealth	->	1067
+[Leave] powerworld::archer::defence	->	1025
+[Enter] powerworld::archer::attack
+	[Enter] powerworld::archer::getCombat
+	[Leave] powerworld::archer::getCombat	->	10
+	[Enter] powerworld::archer::getHealth
+	[Leave] powerworld::archer::getHealth	->	1067
+[Leave] powerworld::archer::attack	->	10
+[Enter] powerworld::monster::defence
+	[Enter] powerworld::monster::getHealth
+	[Leave] powerworld::monster::getHealth	->	80
+[Leave] powerworld::monster::defence	->	1
+[Enter] powerworld::monster::attack
+	[Enter] powerworld::monster::getCombat
+	[Leave] powerworld::monster::getCombat	->	11
+	[Enter] powerworld::monster::getHealth
+	[Leave] powerworld::monster::getHealth	->	80
+[Leave] powerworld::monster::attack	->	11
+[Enter] powerworld::archer::defence
+	[Enter] powerworld::archer::getHealth
+	[Leave] powerworld::archer::getHealth	->	1056
+[Leave] powerworld::archer::defence	->	1025
+[Enter] powerworld::monster::monster
+[Leave] powerworld::monster::monster	->	589911292440

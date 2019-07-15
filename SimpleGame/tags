@@ -1,0 +1,79 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/9b28d8ce/
+PCH_H	pch.h	/^#define PCH_H$/;"	d
+addExp	archer.hpp	/^		void addExp(int val);$/;"	p	class:powerworld::archer	typeref:typename:void	access:public	signature:(int val)
+addExp	archer.hpp	/^	void archer::addExp(int val)$/;"	f	class:powerworld::archer	typeref:typename:void	signature:(int val)
+archer	archer.hpp	/^		archer();$/;"	p	class:powerworld::archer	access:public	signature:()
+archer	archer.hpp	/^	archer::archer() : m_health(1000), combat(10)$/;"	f	class:powerworld::archer	signature:()
+archer	archer.hpp	/^	class archer$/;"	c	namespace:powerworld
+attack	archer.hpp	/^		int attack();$/;"	p	class:powerworld::archer	typeref:typename:int	access:public	signature:()
+attack	archer.hpp	/^	int archer::attack()$/;"	f	class:powerworld::archer	typeref:typename:int	signature:()
+attack	monster.hpp	/^		int attack();$/;"	p	class:powerworld::monster	typeref:typename:int	access:public	signature:()
+attack	monster.hpp	/^	int monster::attack()$/;"	f	class:powerworld::monster	typeref:typename:int	signature:()
+combat	archer.hpp	/^		int combat;$/;"	m	class:powerworld::archer	typeref:typename:int	access:private
+combat	monster.hpp	/^		int combat;$/;"	m	class:powerworld::monster	typeref:typename:int	access:private
+defence	archer.hpp	/^		bool defence(int hit);$/;"	p	class:powerworld::archer	typeref:typename:bool	access:public	signature:(int hit)
+defence	archer.hpp	/^	bool archer::defence(int hit)$/;"	f	class:powerworld::archer	typeref:typename:bool	signature:(int hit)
+defence	monster.hpp	/^		bool defence(int hit);$/;"	p	class:powerworld::monster	typeref:typename:bool	access:public	signature:(int hit)
+defence	monster.hpp	/^	bool monster::defence(int hit)$/;"	f	class:powerworld::monster	typeref:typename:bool	signature:(int hit)
+getCombat	archer.hpp	/^		int getCombat();$/;"	p	class:powerworld::archer	typeref:typename:int	access:private	signature:()
+getCombat	archer.hpp	/^	int archer::getCombat()$/;"	f	class:powerworld::archer	typeref:typename:int	signature:()
+getCombat	monster.hpp	/^		int getCombat();$/;"	p	class:powerworld::monster	typeref:typename:int	access:private	signature:()
+getCombat	monster.hpp	/^	int monster::getCombat()$/;"	f	class:powerworld::monster	typeref:typename:int	signature:()
+getHealth	archer.hpp	/^		unsigned long long getHealth();$/;"	p	class:powerworld::archer	typeref:typename:unsigned long long	access:private	signature:()
+getHealth	archer.hpp	/^	unsigned long long archer::getHealth()$/;"	f	class:powerworld::archer	typeref:typename:unsigned long long	signature:()
+getHealth	monster.hpp	/^		unsigned long long getHealth();$/;"	p	class:powerworld::monster	typeref:typename:unsigned long long	access:private	signature:()
+getHealth	monster.hpp	/^	unsigned long long monster::getHealth()$/;"	f	class:powerworld::monster	typeref:typename:unsigned long long	signature:()
+heal	archer.hpp	/^		void heal(int level);$/;"	p	class:powerworld::archer	typeref:typename:void	access:public	signature:(int level)
+heal	archer.hpp	/^	void archer::heal(int level)$/;"	f	class:powerworld::archer	typeref:typename:void	signature:(int level)
+m_health	archer.hpp	/^		unsigned long long m_health;$/;"	m	class:powerworld::archer	typeref:typename:unsigned long long	access:private
+m_health	monster.hpp	/^		unsigned long long m_health;$/;"	m	class:powerworld::monster	typeref:typename:unsigned long long	access:private
+main	SimpleGame.cpp	/^int main()$/;"	f	typeref:typename:int	signature:()
+monster	monster.hpp	/^		monster(int level);$/;"	p	class:powerworld::monster	access:public	signature:(int level)
+monster	monster.hpp	/^	class monster$/;"	c	namespace:powerworld
+monster	monster.hpp	/^	monster::monster(int level) : m_health(10 * level + 100), combat(10 + level)$/;"	f	class:powerworld::monster	signature:(int level)
+powerworld	archer.hpp	/^namespace powerworld$/;"	n
+powerworld	monster.hpp	/^namespace powerworld$/;"	n
+powerworld::archer	archer.hpp	/^	class archer$/;"	c	namespace:powerworld
+powerworld::archer::addExp	archer.hpp	/^		void addExp(int val);$/;"	p	class:powerworld::archer	typeref:typename:void	access:public	signature:(int val)
+powerworld::archer::addExp	archer.hpp	/^	void archer::addExp(int val)$/;"	f	class:powerworld::archer	typeref:typename:void	signature:(int val)
+powerworld::archer::archer	archer.hpp	/^		archer();$/;"	p	class:powerworld::archer	access:public	signature:()
+powerworld::archer::archer	archer.hpp	/^	archer::archer() : m_health(1000), combat(10)$/;"	f	class:powerworld::archer	signature:()
+powerworld::archer::attack	archer.hpp	/^		int attack();$/;"	p	class:powerworld::archer	typeref:typename:int	access:public	signature:()
+powerworld::archer::attack	archer.hpp	/^	int archer::attack()$/;"	f	class:powerworld::archer	typeref:typename:int	signature:()
+powerworld::archer::combat	archer.hpp	/^		int combat;$/;"	m	class:powerworld::archer	typeref:typename:int	access:private
+powerworld::archer::defence	archer.hpp	/^		bool defence(int hit);$/;"	p	class:powerworld::archer	typeref:typename:bool	access:public	signature:(int hit)
+powerworld::archer::defence	archer.hpp	/^	bool archer::defence(int hit)$/;"	f	class:powerworld::archer	typeref:typename:bool	signature:(int hit)
+powerworld::archer::getCombat	archer.hpp	/^		int getCombat();$/;"	p	class:powerworld::archer	typeref:typename:int	access:private	signature:()
+powerworld::archer::getCombat	archer.hpp	/^	int archer::getCombat()$/;"	f	class:powerworld::archer	typeref:typename:int	signature:()
+powerworld::archer::getHealth	archer.hpp	/^		unsigned long long getHealth();$/;"	p	class:powerworld::archer	typeref:typename:unsigned long long	access:private	signature:()
+powerworld::archer::getHealth	archer.hpp	/^	unsigned long long archer::getHealth()$/;"	f	class:powerworld::archer	typeref:typename:unsigned long long	signature:()
+powerworld::archer::heal	archer.hpp	/^		void heal(int level);$/;"	p	class:powerworld::archer	typeref:typename:void	access:public	signature:(int level)
+powerworld::archer::heal	archer.hpp	/^	void archer::heal(int level)$/;"	f	class:powerworld::archer	typeref:typename:void	signature:(int level)
+powerworld::archer::m_health	archer.hpp	/^		unsigned long long m_health;$/;"	m	class:powerworld::archer	typeref:typename:unsigned long long	access:private
+powerworld::archer::skillIncredibleShot	archer.hpp	/^		static int skillIncredibleShot(int power);$/;"	p	class:powerworld::archer	typeref:typename:int	access:public	signature:(int power)
+powerworld::archer::skillIncredibleShot	archer.hpp	/^	int archer::skillIncredibleShot(int level)$/;"	f	class:powerworld::archer	typeref:typename:int	signature:(int level)
+powerworld::archer::~archer	archer.hpp	/^		~archer();$/;"	p	class:powerworld::archer	access:public	signature:()
+powerworld::archer::~archer	archer.hpp	/^	archer::~archer()$/;"	f	class:powerworld::archer	signature:()
+powerworld::monster	monster.hpp	/^	class monster$/;"	c	namespace:powerworld
+powerworld::monster::attack	monster.hpp	/^		int attack();$/;"	p	class:powerworld::monster	typeref:typename:int	access:public	signature:()
+powerworld::monster::attack	monster.hpp	/^	int monster::attack()$/;"	f	class:powerworld::monster	typeref:typename:int	signature:()
+powerworld::monster::combat	monster.hpp	/^		int combat;$/;"	m	class:powerworld::monster	typeref:typename:int	access:private
+powerworld::monster::defence	monster.hpp	/^		bool defence(int hit);$/;"	p	class:powerworld::monster	typeref:typename:bool	access:public	signature:(int hit)
+powerworld::monster::defence	monster.hpp	/^	bool monster::defence(int hit)$/;"	f	class:powerworld::monster	typeref:typename:bool	signature:(int hit)
+powerworld::monster::getCombat	monster.hpp	/^		int getCombat();$/;"	p	class:powerworld::monster	typeref:typename:int	access:private	signature:()
+powerworld::monster::getCombat	monster.hpp	/^	int monster::getCombat()$/;"	f	class:powerworld::monster	typeref:typename:int	signature:()
+powerworld::monster::getHealth	monster.hpp	/^		unsigned long long getHealth();$/;"	p	class:powerworld::monster	typeref:typename:unsigned long long	access:private	signature:()
+powerworld::monster::getHealth	monster.hpp	/^	unsigned long long monster::getHealth()$/;"	f	class:powerworld::monster	typeref:typename:unsigned long long	signature:()
+powerworld::monster::m_health	monster.hpp	/^		unsigned long long m_health;$/;"	m	class:powerworld::monster	typeref:typename:unsigned long long	access:private
+powerworld::monster::monster	monster.hpp	/^		monster(int level);$/;"	p	class:powerworld::monster	access:public	signature:(int level)
+powerworld::monster::monster	monster.hpp	/^	monster::monster(int level) : m_health(10 * level + 100), combat(10 + level)$/;"	f	class:powerworld::monster	signature:(int level)
+skillIncredibleShot	archer.hpp	/^		static int skillIncredibleShot(int power);$/;"	p	class:powerworld::archer	typeref:typename:int	access:public	signature:(int power)
+skillIncredibleShot	archer.hpp	/^	int archer::skillIncredibleShot(int level)$/;"	f	class:powerworld::archer	typeref:typename:int	signature:(int level)
+~archer	archer.hpp	/^		~archer();$/;"	p	class:powerworld::archer	access:public	signature:()
+~archer	archer.hpp	/^	archer::~archer()$/;"	f	class:powerworld::archer	signature:()

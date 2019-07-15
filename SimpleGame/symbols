@@ -1,0 +1,14 @@
+powerworld::archer::archer	23157ca0
+powerworld::monster::monster	23157d90
+powerworld::archer::~archer	23158850
+powerworld::archer::addExp	2315c4c0
+powerworld::archer::attack	2315c6b0
+powerworld::monster::attack	2315c740
+powerworld::archer::defence	2315cc00
+powerworld::monster::defence	2315ccd0
+powerworld::archer::getCombat	2315d1f0
+powerworld::monster::getCombat	2315d250
+powerworld::archer::getHealth	2315d2b0
+powerworld::monster::getHealth	2315d310
+powerworld::archer::heal	2315d590
+powerworld::archer::skillIncredibleShot	2315e160

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Sync">
+      <UniqueIdentifier>{30533d8f-b720-42a8-a216-f9b93f3398cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Listener">
+      <UniqueIdentifier>{a1dda635-4b5d-464a-a8e2-d065e342636d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{c8874f10-a8f0-4c6f-8098-0e86a34704d7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SpinLock.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="CriticalSection.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="ISync.h">
+      <Filter>Sync</Filter>
+    </ClInclude>
+    <ClInclude Include="Profiler.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="CallStack.h">
+      <Filter>Listener</Filter>
+    </ClInclude>
+    <ClInclude Include="MonitorOption.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SymServer.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="StringPool.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ActType.h" />
+    <ClInclude Include="CallMonitor.h" />
+    <ClInclude Include="MonitorContext.h" />
+    <ClInclude Include="PipeServer.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SpinLock.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="CriticalSection.cpp">
+      <Filter>Sync</Filter>
+    </ClCompile>
+    <ClCompile Include="Profiler.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="IListener.h">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="CallStack.cpp">
+      <Filter>Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="CallMonitor.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="SymServer.cpp" />
+    <ClCompile Include="StringPool.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.h" />
+    <ClCompile Include="PipeServer.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
