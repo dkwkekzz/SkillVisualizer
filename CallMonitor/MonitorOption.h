@@ -7,7 +7,6 @@ enum MonitorOption
 	Log = 1 << 1,
 	Display = 1 << 2,
 	Profiling = 1 << 3,
-	Commander = 1 << 4,
 };
 
 inline MonitorOption operator|(MonitorOption a, MonitorOption b)

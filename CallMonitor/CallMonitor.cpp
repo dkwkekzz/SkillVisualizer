@@ -31,15 +31,15 @@ const char*
 CallMonitor::Top()
 {
 	if (m_stSym.empty())
-		return "empty";
+		return nullptr;
 	return m_stSym.top();
 }
 
 void 
 CallMonitor::SetState(MonitorOption op)
 {
-	//for (auto * listener : m_listeners)
-	//	listener->SetState(op);
+	if (pProfiler) pProfiler->SetState(op);
+	if (pStack) pStack->SetState(op);
 }
 
 CallMonitor 
@@ -84,8 +84,8 @@ CallMonitor::Push( MonitorOption op, const char* szCallee )
 	ctx.mop = op;
 	ctx.pipe = &pipe;
 
-	if (pStack) pStack->Push(ctx);
 	if (pProfiler) pProfiler->Push(ctx);
+	if (pStack) pStack->Push(ctx);
 	//pipe.Write(ctx);
 	//for (auto * listener : m_listeners)
 	//	listener->Push(ctx);
@@ -114,8 +114,8 @@ CallMonitor::Pop(MonitorOption op, UINT64 ret)
 	ctx.mop = op;
 	ctx.pipe = &pipe;
 
-	if (pStack) pStack->Pop(ctx);
 	if (pProfiler) pProfiler->Pop(ctx);
+	if (pStack) pStack->Pop(ctx);
 	//pipe.Write(ctx);
 
 	//for (auto * listener : m_listeners)
@@ -127,11 +127,7 @@ CallMonitor::Pop(MonitorOption op, UINT64 ret)
 void
 CallMonitor::Action(ActType at)
 {
-	//IListener::ActionContext ac;
-	//ac.type = at;
-
-	//for (auto * listener : m_listeners)
-	//	listener->Action(ac);
+	if (pProfiler) pProfiler->Action(at);
 }
 
 void

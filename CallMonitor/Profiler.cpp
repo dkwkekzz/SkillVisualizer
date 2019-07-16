@@ -1,18 +1,35 @@
 #include "stdafx.h"
 #include "Profiler.h"
 #include "PipeServer.h"
+#include "SpinLock.h"
 
-#define BUFSIZE 512 
+//
+// static
+//
+
+std::map<int, vector<Profiler::ProfileInfo> > Profiler::g_mapProfileInfo;
+static SpinLock sync;
 
 
 void
 Profiler::SetState(MonitorOption op)
 {
+	if (op | MonitorOption::Profiling)
+	{
+		m_run = true;
+	}
+	else
+	{
+		m_run = false;
+	}
 }
 
 void
 Profiler::Push(const MonitorContext& ctx)
 {
+	if (!m_run)
+		return;
+
 	ProfileInfo profInfo;
 	strcpy(profInfo.m_sFunName, ctx.callee);
 
@@ -20,6 +37,8 @@ Profiler::Push(const MonitorContext& ctx)
 
 	DWORD tid = ::GetCurrentThreadId();
 	profInfo.m_dwThreadID = tid;
+
+	sync.Enter();
 
 	map<int, vector<ProfileInfo> >::iterator itTID = g_mapProfileInfo.find(tid);
 	if (itTID != g_mapProfileInfo.end())
@@ -32,11 +51,18 @@ Profiler::Push(const MonitorContext& ctx)
 		vecProfInfo.push_back(profInfo);
 		g_mapProfileInfo.insert(make_pair(tid, vecProfInfo));
 	}
+
+	sync.Leave();
 }
 
 void
 Profiler::Pop(const MonitorContext& ctx)
 {
+	if (!m_run)
+		return;
+
+	sync.Enter();
+
 	DWORD tid = ::GetCurrentThreadId();
 	map<int, vector<ProfileInfo> >::iterator itTID = g_mapProfileInfo.find(tid);
 	if (itTID != g_mapProfileInfo.end())
@@ -57,6 +83,28 @@ Profiler::Pop(const MonitorContext& ctx)
 			--it;
 		}
 	}
+
+	sync.Leave();
+}
+
+
+void 
+Profiler::Action(const ActType at)
+{
+	if (!m_run)
+		return;
+
+	if (at == ActType::PrintProfile)
+	{
+		DisplayProfileData();
+		return;
+	}
+
+	if (at == ActType::Clear)
+	{
+		g_mapProfileInfo.clear();
+		return;
+	}
 }
 
 //Iterate through the map and for each thread id print the profile
@@ -64,10 +112,12 @@ Profiler::Pop(const MonitorContext& ctx)
 void
 Profiler::DisplayProfileData()
 {
-	std::ofstream os("ProfileData");
+	sync.Enter();
+
+	std::ofstream os("ProfileData.csv");
 
 	os << "##########################Profile Information############################" << endl;
-	os << "Function" << ',' << "Thread" << ',' << "Elapsed" << endl;
+	os << "Thread" << ',' << "Function" << ',' << "Elapsed" << endl;
 	map<int, vector<ProfileInfo> >::iterator itThread = g_mapProfileInfo.begin();
 	for (; itThread != g_mapProfileInfo.end(); ++itThread)
 	{
@@ -80,6 +130,11 @@ Profiler::DisplayProfileData()
 	}
 
 	os.close();
+
+	std::cout << "print profile data: " << g_mapProfileInfo.size() << std::endl;
+	g_mapProfileInfo.clear();
+
+	sync.Leave();
 }
 
 //*******************************************************************************
@@ -96,6 +151,6 @@ Profiler::ProfileInfo::Display(std::ostream& os)
 
 	elapsedTime.QuadPart = (elapsedTime.QuadPart) * 1000 * 1000 / freq.QuadPart;
 
-	os << m_sFunName << ',' << m_dwThreadID << ',' << elapsedTime.QuadPart << endl;
+	os << m_dwThreadID << ',' << m_sFunName << ',' << elapsedTime.QuadPart << endl;
 }
 //*******************************************************************************

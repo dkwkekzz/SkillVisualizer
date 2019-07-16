@@ -38,7 +38,7 @@ void ProcEnter(void* pa, void* pth)
 		if (iter != linkMap.end())
 		{	// if linked, enter
 			linkMap.erase(iter);
-			EnterSymbol(fdata.name);
+			EnterSymbol((*iter).second);
 		}
 		else
 		{
@@ -123,13 +123,14 @@ void Release()
 //
 
 void* GetAlarmRegist(void * pth, void * pob)
-{	// 테스트환경에서 실제 객체를 집어넣어보고, 
-	// 알람을 호출해서
-	// 적절하게 연결되는지를 확인해야 한다.
+{	
 	const char* callee = CurrentSymbol();
-	std::cout << "GetAlarmRegist from: " << callee << std::endl;
+	if (nullptr != callee)
+	{
+		std::cout << "GetAlarmRegist from: " << callee << std::endl;
+		linkMap.emplace(pob, callee);
+	}
 
-	linkMap.emplace(pob, callee);
 	return hkAlarmRegist->GetOriginal<void*>();
 }
 

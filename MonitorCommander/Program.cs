@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 
 namespace MonitorCommander
 {
@@ -12,14 +13,33 @@ namespace MonitorCommander
     {
         static void Main(string[] args)
         {
-            string cmdLine;
-            while (true)
+            using (NamedPipe pipe = NamedPipe.CreateClient("callmonitor", PipeDirection.PIPE_ACCESS_OUTBOUND))
             {
-                cmdLine = Console.ReadLine();
+                if (pipe != null && pipe.IsConnected == true)
+                {
+                    Console.WriteLine("***********************************************");
+                    Console.WriteLine("*                                             *");
+                    Console.WriteLine("*        Unbelievable MonitorCommander!       *");
+                    Console.WriteLine("*                                             *");
+                    Console.WriteLine("***********************************************");
 
-                // for test
-                Console.WriteLine(cmdLine);
+                    string cmdLine;
+                    while (true)
+                    {
+                        cmdLine = Console.ReadLine();
+
+                        pipe.WriteString(cmdLine);
+                        pipe.WaitForPipeDrain();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("fail to connected...");
+                }
             }
+
+            Console.WriteLine("Press key to exit...");
+            Console.Read();
         }
     }
 }

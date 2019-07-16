@@ -8,7 +8,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading;
 
-namespace SimpleDisplay
+namespace Common
 {
     /// <summary>
     /// 명명 파이프

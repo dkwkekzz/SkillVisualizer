@@ -13,7 +13,7 @@
 #include <windows.h>
 #include <iostream>
 #include <ctime>
-#include <queue>z
+#include <queue>
 using namespace std;
 
 #endif //PCH_H

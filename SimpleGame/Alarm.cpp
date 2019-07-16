@@ -1,6 +1,7 @@
 
 #include "pch.h"
 #include "Alarm.h"
+#include <mutex>
 
 namespace Suite { namespace Module { namespace Infra {
 namespace NTime { namespace NAlarm {
@@ -9,7 +10,8 @@ struct Alarm::Private
 {
 	const char* name = "private::alarm";
 	UINT64 tick = 0;
-	IObserver * ob;
+	IObserver * ob{nullptr};
+	mutex m;
 };
 
 Alarm::Alarm()
@@ -20,8 +22,10 @@ Alarm::Alarm()
 const Handle
 Alarm::Regist( IObserver * pObserver, IValue * pValue, CUINT64 ullTick, CBOOL skipLog )
 {
+	This->m.lock();
 	std::cout << "@@Regist" << std::endl;
 	This->ob = pObserver;
+	This->m.unlock();
 	return Handle();
 }
 
@@ -62,11 +66,13 @@ Alarm::Cancel( const Handle & stHandle, CCHAR * szFileLocation )
 void
 Alarm::OnTick()
 {
+	This->m.lock();
 	if (This->ob)
 	{
 		This->ob->OnAlarm(This->tick += 10);
 		This->ob = nullptr;
 	}
+	This->m.unlock();
 }
 
 void

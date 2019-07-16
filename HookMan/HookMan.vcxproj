@@ -155,6 +155,7 @@
     <ClInclude Include="HookHelper.h" />
     <ClInclude Include="masm.h" />
     <ClInclude Include="PolyHook.hpp" />
+    <ClInclude Include="SpinLock.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SymbolTable.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

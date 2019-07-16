@@ -4,6 +4,7 @@ enum ActType
 {
 	PrintLog,
 	PrintProfile,
+	Clear,
 };
 
 inline ActType operator|(ActType a, ActType b)

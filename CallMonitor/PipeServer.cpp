@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "PipeServer.h"
 #include "SpinLock.h"
+#include "SymServer.h"
 
 #define PIPE_BUF_SIZE 1024
 #define PIPE_TIMEOUT 5000
@@ -115,7 +116,7 @@ unsigned long __stdcall NET_RvThr(void * pParam)
 
 	BOOL fSuccess;
 	char chBuf[BUFSIZE];
-	DWORD dwBytesToWrite = (DWORD)strlen(chBuf);
+	DWORD dwBytesToWrite = BUFSIZE - 1;
 	DWORD cbRead;
 	int i;
 
@@ -128,6 +129,8 @@ unsigned long __stdcall NET_RvThr(void * pParam)
 			for (i = 0; i < cbRead; i++)
 				printf("%c", chBuf[i]);
 			printf("\n");
+
+			Execute(chBuf);
 		}
 
 		if (bFinished)
@@ -142,8 +145,6 @@ PipeServer::Initialize()
 {
 	if (!bFinished)
 		return 0;
-
-	bFinished = FALSE;
 
 	// Create an event object for this instance. 
 
@@ -190,13 +191,16 @@ PipeServer::Initialize()
 		CONNECTING_STATE : // still connecting 
 		READING_STATE;     // ready to write
 
+	DWORD tid;
 	hListener = CreateThread(
 		NULL,
 		0,
 		&NET_RvThr,
 		NULL,
 		0,
-		0);
+		&tid);
+
+	bFinished = FALSE;
 }
 
 void

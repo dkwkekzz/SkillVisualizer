@@ -155,6 +155,7 @@
     <ClInclude Include="Alarm.h" />
     <ClInclude Include="archer.hpp" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="masm.h" />
     <ClInclude Include="monster.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Single.h" />

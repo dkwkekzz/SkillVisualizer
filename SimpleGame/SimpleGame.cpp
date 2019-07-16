@@ -6,59 +6,119 @@
 #include "monster.hpp"
 #include "Static.h"
 #include "Alarm.h"
+#include "masm.h"
+#include <mutex>
 #include <thread>
+
+using namespace powerworld;
+Suite::Module::Infra::NTime::NAlarm::Alarm alarm;
+
+Suite::Game::Function::NTimer::BuffPackage inst;
+
+mutex m;
+
+class updater
+{
+public:
+	void doing()
+	{
+		//monster m1(2);
+		//archer a1;
+		//m1.defence(a1.attack());
+		//a1.defence(m1.attack());
+		//a1.heal(1);
+		//a1.none();
+
+		alarm.OnTick();
+	}
+};
+
+void test()
+{
+	using namespace std;
+
+	bool universal = true;
+	std::thread world1([&]() {
+		while (universal)
+		{
+			PushVal(111);
+			//std::this_thread::sleep_for(100ms);
+			auto a = PopVal();
+			m.lock();
+			std::cout << "thread1: " << a << std::endl;
+			m.unlock();
+		}
+	});
+
+	std::thread world2([&]() {
+		while (universal)
+		{
+			PushVal(222);
+			//std::this_thread::sleep_for(100ms);
+			auto a = PopVal();
+			m.lock();
+			std::cout << "thread2: " << a << std::endl;
+			m.unlock();
+		}
+	});
+
+	world1.join();
+	world2.join();
+}
+
+void testwork1()
+{
+	updater upd;
+	int universal = true;
+	while (universal)
+	{
+		upd.doing();
+		this_thread::sleep_for(10ms);
+	}
+}
+
+void testwork2()
+{
+	monster m1(2);
+	archer a1;
+	a1.none();
+
+	int universal = true;
+	while (universal)
+	{
+		alarm.Regist(&inst, nullptr, 0);
+
+		m1.defence(a1.attack());
+		a1.defence(m1.attack());
+		a1.heal(1);
+
+		this_thread::sleep_for(100ms);
+	}
+}
 
 int main()
 {
+	//test();
+
 	HMODULE hdll = LoadLibraryA("HookMan.dll");
 	//HMODULE hdll2 = LoadLibraryA("CallMonitor.dll");
 
-	using namespace powerworld;
     std::cout << "Archer World!\n";
 
 	archer player;
 	queue<monster> monque;
 
-	Suite::Module::Infra::NTime::NAlarm::Alarm alarm;
 
-	Suite::Game::Function::NTimer::BuffPackage inst;
+	//alarm.Regist(&inst, nullptr, 0);
 
-	alarm.Regist(&inst, nullptr, 0);
+	//inst.OnAlarm(999);
 
-	inst.OnAlarm(999);
-
-	int universal = true;
 	std::thread world1([&]() {
-		monster m1(2);
-		archer a1;
-		a1.none();
-		while (universal)
-		{
-			//m1.defence(a1.attack());
-			//a1.defence(m1.attack());
-			//a1.heal(1);
-	
-			alarm.OnTick();
-
-			this_thread::sleep_for(10ms);
-		}
+		testwork1();
 	});
 
 	std::thread world2([&]() {
-		monster m1(2);
-		archer a1;
-		a1.none();
-	
-		while (universal)
-		{
-			alarm.Regist(&inst, nullptr, 0);
-
-			//m1.defence(a1.attack());
-			//a1.defence(m1.attack());
-			//a1.heal(1);
-	
-			this_thread::sleep_for(100ms);
-		}
+		testwork2();
 	});
 
 	int level = 1;
@@ -141,6 +201,5 @@ int main()
 	world1.join();
 	world2.join();
 
-	std::cout << "good bye!\n";
 	std::cin.get();
 }

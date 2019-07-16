@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Common;
 
 namespace SimpleDisplay
 {
@@ -23,9 +24,6 @@ namespace SimpleDisplay
                     Console.WriteLine("*                                             *");
                     Console.WriteLine("***********************************************");
                     
-                    //pipe.WriteString("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-
-                    //pipe.WaitForPipeDrain();
                     //var targets = new Dictionary<uint, int>();
                     var bOn = false;
                     var nCount = 0;

@@ -13,11 +13,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	{
 	case DLL_PROCESS_ATTACH:
 	{
-#if _DEBUG
-		::SetMonitorState(MonitorOption::RealTime | MonitorOption::Display);
-#else
-		::SetMonitorState(MonitorOption::Log);
-#endif
 		//CallMonitor::threadAttach(new CallMonitor);
 
 		cout << "[callmonitor] open...!" << endl;

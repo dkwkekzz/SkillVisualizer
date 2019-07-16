@@ -8,6 +8,7 @@ public:
 	virtual void SetState(MonitorOption op) override;
 	virtual void Push(const MonitorContext& ctx) override;
 	virtual void Pop(const MonitorContext& ctx) override;
+	virtual void Action(const ActType at) override;
 
 private:
 	struct ProfileInfo
@@ -37,6 +38,8 @@ private:
 	void DisplayProfileData();
 
 private:
-	std::map<int, vector<ProfileInfo> > g_mapProfileInfo;
+	static std::map<int, vector<ProfileInfo> > g_mapProfileInfo;
+
+	bool m_run { true };
 
 };

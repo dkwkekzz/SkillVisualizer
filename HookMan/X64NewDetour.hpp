@@ -1,4 +1,5 @@
 #pragma once
+#define PLH_HIDE_DEBUG_MESSAGES 1
 #include "PolyHook.hpp"
 
 constexpr int jmpLen = 16;
