@@ -7,15 +7,16 @@
 #include <iostream>
 #include <map>
 #include <fstream>
-#pragma comment (lib, "CallMonitor.lib")
 
 static uint8_t* pRoot;
 static std::map<void*, std::shared_ptr<PLH::AbstractDetour>> hookMap;
 static std::map<void*, const char*> linkMap;
-static std::shared_ptr<PLH::AbstractDetour> hkAlarmRegist;
+static std::shared_ptr<PLH::AbstractDetour> hkAlarmRegist1;
+static std::shared_ptr<PLH::AbstractDetour> hkAlarmRegist2;
 
 static void RangeHookByAddr(std::wostream& ofile, const std::vector<uint64_t> & listPtr, const std::vector<std::wstring> & listFunc);
 static bool HookSpecialized(std::wostream& ofile, const std::wstring& funcName, BYTE* hkfp, std::shared_ptr<PLH::AbstractDetour>& detour);
+static bool HookSpecializedByAddr(std::wostream& ofile, const DWORD64 funcAddr, BYTE* hkfp, std::shared_ptr<PLH::AbstractDetour>& detour);
 static void RangeHook(const std::vector<std::wstring> & listFunc);
 static bool attachHook(const std::string& funcName);
 
@@ -28,21 +29,21 @@ void* GetOriginal(void * p)
 	return hookMap[p]->GetOriginal<void*>();
 }
 
-void ProcEnter(void* pa, void* pth)
+void ProcEnter(void* pth, void* paddr)
 {
 	FunctionData fdata;
-	FindFunction(pa, fdata);
+	FindFunction(paddr, fdata);
 	if (fdata.sort == FunctionSort::Alarm)
 	{
 		const auto & iter = linkMap.find(pth);
 		if (iter != linkMap.end())
 		{	// if linked, enter
+			EnterSymbol((*iter).second, fdata.name);
 			linkMap.erase(iter);
-			EnterSymbol((*iter).second);
 		}
 		else
 		{
-			EnterSymbol(NULL);
+			EnterSymbol(nullptr);
 		}
 	}
 	else
@@ -122,27 +123,57 @@ void Release()
 // specialize
 //
 
-void* GetAlarmRegist(void * pth, void * pob)
+void* GetAlarmRegist1(void * pth, void * pa, void * pb)
 {	
 	const char* callee = CurrentSymbol();
 	if (nullptr != callee)
 	{
-		std::cout << "GetAlarmRegist from: " << callee << std::endl;
-		linkMap.emplace(pob, callee);
+		std::cout << "GetAlarmRegist1 from: " << callee << std::endl;
+		auto * dupCallee = new char[strlen(callee) + 1];
+		strcpy(dupCallee, callee);
+		linkMap.emplace(pb, dupCallee);
 	}
 
-	return hkAlarmRegist->GetOriginal<void*>();
+	return hkAlarmRegist1->GetOriginal<void*>();
 }
 
-bool IsSpecialized(const wchar_t* src)
+void* GetAlarmRegist2(void * pth, void * pa, void * pb)
 {
-	return wcsstr(src, L"Suite::Module::Infra::NTime::NAlarm::Alarm::Regist");
+	const char* callee = CurrentSymbol();
+	if (nullptr != callee)
+	{
+		std::cout << "GetAlarmRegist2 from: " << callee << std::endl;
+		auto * dupCallee = new char[strlen(callee) + 1];
+		strcpy(dupCallee, callee);
+		linkMap.emplace(pb, dupCallee);
+	}
+
+	return hkAlarmRegist2->GetOriginal<void*>();
 }
 
-void CollectSpecialized(std::wostream& ofile)
+bool TryHookSpecialized(std::wostream& ofile, const wchar_t* src, DWORD64 funcAddr)
 {
-	HookSpecialized(ofile, L"Suite::Module::Infra::NTime::NAlarm::Alarm::Regist", (BYTE*)&_dummy_alarmRegist, hkAlarmRegist);
+	if (wcsstr(src, L"Suite::Module::Infra::NTime::NAlarm::Alarm::Regist"))
+	{
+		if (hkAlarmRegist1.use_count() == 0)
+		{
+			HookSpecializedByAddr(ofile, funcAddr, (BYTE*)&_dummy_alarmRegist1, hkAlarmRegist1);
+		}
+		else
+		{
+			HookSpecializedByAddr(ofile, funcAddr, (BYTE*)&_dummy_alarmRegist2, hkAlarmRegist2);
+		}
+
+		return true;
+	}
+
+	return false;
 }
+
+//void CollectSpecialized(std::wostream& ofile)
+//{
+//	HookSpecialized(ofile, L"Suite::Module::Infra::NTime::NAlarm::Alarm::Regist", (BYTE*)&_dummy_alarmRegist1, hkAlarmRegist1);
+//}
 
 // 
 // static
@@ -242,9 +273,9 @@ void RangeHookByAddr(std::wostream& ofile, const std::vector<uint64_t> & listPtr
 			continue;
 		}
 
-		if (IsSpecialized(listFunc[i].c_str()))
+		if (TryHookSpecialized(ofile, listFunc[i].c_str(), listPtr[i]))
 		{
-			ofile << "[RangeHookByAddr][Warning] pass for specialized: " << (listFunc[i]) << std::endl;
+			ofile << "[RangeHookByAddr][Warning] hook specialized: " << (listFunc[i]) << std::endl;
 			continue;
 		}
 		//BOOL bResult = SymFromNameW(GetCurrentProcess(), listFunc[i].c_str(), pSymbolInfo);
@@ -361,7 +392,7 @@ bool HookSpecialized(std::wostream& ofile, const std::wstring& funcName, BYTE* h
 	BOOL bResult = SymFromNameW(GetCurrentProcess(), funcName.c_str(), pSymbolInfo);
 	if (FALSE == bResult)
 	{
-		std::wcout << "[HookSpecialized] fail to found function symbol: " << funcName << std::endl;
+		ofile << "[HookSpecialized] fail to found function symbol: " << funcName << std::endl;
 		return false;
 	}
 
@@ -369,7 +400,34 @@ bool HookSpecialized(std::wostream& ofile, const std::wstring& funcName, BYTE* h
 	detour->SetupHook((BYTE*)pSymbolInfo->Address, hkfp); //can cast to byte* to
 	if (FALSE == detour->Hook())
 	{
-		std::wcout << "[HookSpecialized][Warning] Function to small to hook: " << funcName << std::endl;
+		ofile << "[HookSpecialized][Warning] Function to small to hook: " << funcName << std::endl;
+		return false;
+	}
+
+	return true;
+}
+
+bool HookSpecializedByAddr(std::wostream& ofile, const DWORD64 funcAddr, BYTE* hkfp, std::shared_ptr<PLH::AbstractDetour>& detour)
+{
+	TCHAR  buffer[sizeof(SYMBOL_INFOW) + MAX_SYM_NAME * sizeof(TCHAR)];
+	memset(&buffer, 0, sizeof(buffer));
+	PSYMBOL_INFOW    pSymbolInfo = (PSYMBOL_INFOW)buffer;
+	pSymbolInfo->SizeOfStruct = sizeof(SYMBOL_INFOW);
+	pSymbolInfo->MaxNameLen = MAX_SYM_NAME;
+	DWORD64 symDisplacement = 0;
+
+	BOOL bResult = SymFromAddrW(GetCurrentProcess(), funcAddr, &symDisplacement, pSymbolInfo);
+	if (FALSE == bResult)
+	{
+		ofile << "[HookSpecializedByAddr] fail to found function symbol: " << std::hex << funcAddr << std::endl;
+		return false;
+	}
+
+	detour = std::make_shared<PLH::X64Detour>();
+	detour->SetupHook((BYTE*)pSymbolInfo->Address, hkfp); //can cast to byte* to
+	if (FALSE == detour->Hook())
+	{
+		ofile << "[HookSpecializedByAddr][Warning] Function to small to hook: " << pSymbolInfo->Name << std::endl;
 		return false;
 	}
 

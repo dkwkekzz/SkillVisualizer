@@ -32,9 +32,9 @@ _dummy proc
 	sub rsp,20h
 
 	; Get the return address of the function
-	mov  rcx,rax
-	sub  rcx,12
-	mov  qword ptr[rsp+18h],rcx
+	mov  rdx,rax
+	sub  rdx,12
+	mov  qword ptr[rsp+18h],rdx
 
 	; call the function to get the name of the callee and caller	
 	call ProcEnter

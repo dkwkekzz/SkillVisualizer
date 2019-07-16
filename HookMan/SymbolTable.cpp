@@ -173,6 +173,7 @@ void FindFunction(void* pa, FunctionData & stFuncData )
 	if (iter != cached.end())
 	{
 		stFuncData = (*iter).second;
+		::LeaveCriticalSection(&csProfileInfo);
 		return;
 	}
 

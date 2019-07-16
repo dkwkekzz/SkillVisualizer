@@ -3,6 +3,7 @@
 #include "HookHelper.h"
 #include <iostream>
 #include <fstream>
+#pragma comment (lib, "CallMonitor.lib")
 
 
 BOOL APIENTRY DllMain( HMODULE hModule,
@@ -18,7 +19,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 		std::wofstream ofile("hooklog.txt");
 
-		::CollectSpecialized(ofile);
+		//::CollectSpecialized(ofile);
 		::Collect(ofile, "symbols");
 
 		ofile.close();

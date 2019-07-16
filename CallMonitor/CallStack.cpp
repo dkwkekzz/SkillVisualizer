@@ -22,7 +22,10 @@ CallStack::Push(const MonitorContext& ctx)
 	CHAR chBuf[BUFSIZE];
 	for (int i = 0; i != ctx.level; i++)
 		chBuf[i] = '\t';
-	sprintf(&chBuf[ctx.level], "[Enter] %d: %s\n", tid, ctx.callee);
+	if (ctx.caller != nullptr)
+		sprintf(&chBuf[ctx.level], "[Enter] %d: %s\t<From %s>\n", tid, ctx.callee, ctx.caller);
+	else
+		sprintf(&chBuf[ctx.level], "[Enter] %d: %s\n", tid, ctx.callee);
 
 	ctx.pipe->Write(chBuf);
 }

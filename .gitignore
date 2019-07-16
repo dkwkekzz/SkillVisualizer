@@ -13,7 +13,6 @@ ipch/
 *.user
 *.opensdf
 *.obj
-*.lib
 *.log
 *.pch
 *.pdb

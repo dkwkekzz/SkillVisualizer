@@ -1,6 +1,6 @@
 #pragma once
 
-enum class FunctionSort : unsigned char
+enum class FunctionSort : int
 {
 	None = 0,
 	Default,

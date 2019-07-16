@@ -10,9 +10,9 @@ static MonitorOption serverState;
 //
 //*********************************************************************************************
 
-void EnterSymbol(const char* szCallee)
+void EnterSymbol(const char* szCallee, const char* szCaller)
 {
-	CallMonitor::threadObj().Push(serverState, szCallee);
+	CallMonitor::threadObj().Push(serverState, szCallee, szCaller);
 }
 
 void LeaveSymbol(unsigned long long ret)

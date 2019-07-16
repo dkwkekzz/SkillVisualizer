@@ -13,7 +13,7 @@
 // export
 //
 
-extern "C" MYEXPORT void EnterSymbol(const char* szCallee);
+extern "C" MYEXPORT void EnterSymbol(const char* szCallee, const char* szCaller = nullptr);
 extern "C" MYEXPORT void LeaveSymbol(unsigned long long ret);
 extern "C" MYEXPORT const char* CurrentSymbol();
 	   

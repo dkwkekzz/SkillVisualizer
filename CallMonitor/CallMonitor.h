@@ -21,7 +21,7 @@ public:
 
 	const char* Top();
 	void SetState( MonitorOption op );
-	void Push( MonitorOption op, const char* szCallee );
+	void Push( MonitorOption op, const char* szCallee, const char* szCaller );
 	void Pop( MonitorOption op, UINT64 ret );
 	void Action( ActType at );
 	void Flush();

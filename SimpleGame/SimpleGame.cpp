@@ -28,8 +28,9 @@ public:
 		//a1.defence(m1.attack());
 		//a1.heal(1);
 		//a1.none();
+		alarm.Regist(&inst, nullptr, 0);
+		//alarm.Regist(&inst, nullptr, 0, nullptr);
 
-		alarm.OnTick();
 	}
 };
 
@@ -68,30 +69,31 @@ void test()
 
 void testwork1()
 {
-	updater upd;
 	int universal = true;
 	while (universal)
 	{
-		upd.doing();
+		alarm.OnTick();
 		this_thread::sleep_for(10ms);
 	}
 }
 
 void testwork2()
 {
-	monster m1(2);
-	archer a1;
-	a1.none();
+	updater upd;
+	//monster m1(2);
+	//archer a1;
+	//a1.none();
 
 	int universal = true;
 	while (universal)
 	{
-		alarm.Regist(&inst, nullptr, 0);
+		//alarm.Regist(&inst, nullptr, 0);
 
-		m1.defence(a1.attack());
-		a1.defence(m1.attack());
-		a1.heal(1);
+		//m1.defence(a1.attack());
+		//a1.defence(m1.attack());
+		//a1.heal(1);
 
+		upd.doing();
 		this_thread::sleep_for(100ms);
 	}
 }
@@ -117,89 +119,90 @@ int main()
 		testwork1();
 	});
 
-	std::thread world2([&]() {
-		testwork2();
-	});
-
-	int level = 1;
-	int turn = 0;
-	bool live = true;
-	while (live)
-	{
-		if (turn++ == 5)
-		{
-			level++;
-			turn = 0;
-		}
-
-		if (turn & 1)
-		{
-			monque.emplace(monster(level));
-			std::cout << "create monster..." << std::endl;
-		}
-
-		monster * pMon = nullptr;
-		if (!monque.empty())
-		{
-			pMon = &monque.front();
-		}
-
-		int in = 0;
-		std::cin >> in;
-		if (in == 0)
-		{	// attack
-			if (!pMon)
-			{
-				std::cout << "no monster..." << std::endl;
-				continue;
-			}
-
-			if (!pMon->defence(player.attack()))
-			{
-				player.addExp(level * 2);
-				monque.pop();
-				continue;
-			}
-		}
-		else if (in == 1)
-		{
-			player.heal(level);
-		}
-		else if (in == 2)
-		{
-			if (!pMon)
-			{
-				std::cout << "no monster..." << std::endl;
-				continue;
-			}
-
-			if (!pMon->defence(archer::skillIncredibleShot(level)))
-			{
-				player.addExp(level);
-				monque.pop();
-				continue;
-			}
-		}
-		else if (in == 9)
-		{
-			break;
-		}
-
-		if (pMon)
-		{
-			live = player.defence(pMon->attack());
-		}
-
-		if (monque.size() > 100)
-		{
-			std::cout << "lose...\n";
-			live = false;
-		}
-	}
-
-	//universal = false;
-	world1.join();
-	world2.join();
+	testwork2();
+	//std::thread world2([&]() {
+	//	testwork2();
+	//});
+	//
+	//int level = 1;
+	//int turn = 0;
+	//bool live = true;
+	//while (live)
+	//{
+	//	if (turn++ == 5)
+	//	{
+	//		level++;
+	//		turn = 0;
+	//	}
+	//
+	//	if (turn & 1)
+	//	{
+	//		monque.emplace(monster(level));
+	//		std::cout << "create monster..." << std::endl;
+	//	}
+	//
+	//	monster * pMon = nullptr;
+	//	if (!monque.empty())
+	//	{
+	//		pMon = &monque.front();
+	//	}
+	//
+	//	int in = 0;
+	//	std::cin >> in;
+	//	if (in == 0)
+	//	{	// attack
+	//		if (!pMon)
+	//		{
+	//			std::cout << "no monster..." << std::endl;
+	//			continue;
+	//		}
+	//
+	//		if (!pMon->defence(player.attack()))
+	//		{
+	//			player.addExp(level * 2);
+	//			monque.pop();
+	//			continue;
+	//		}
+	//	}
+	//	else if (in == 1)
+	//	{
+	//		player.heal(level);
+	//	}
+	//	else if (in == 2)
+	//	{
+	//		if (!pMon)
+	//		{
+	//			std::cout << "no monster..." << std::endl;
+	//			continue;
+	//		}
+	//
+	//		if (!pMon->defence(archer::skillIncredibleShot(level)))
+	//		{
+	//			player.addExp(level);
+	//			monque.pop();
+	//			continue;
+	//		}
+	//	}
+	//	else if (in == 9)
+	//	{
+	//		break;
+	//	}
+	//
+	//	if (pMon)
+	//	{
+	//		live = player.defence(pMon->attack());
+	//	}
+	//
+	//	if (monque.size() > 100)
+	//	{
+	//		std::cout << "lose...\n";
+	//		live = false;
+	//	}
+	//}
+	//
+	////universal = false;
+	//world1.join();
+	//world2.join();
 
 	std::cin.get();
 }

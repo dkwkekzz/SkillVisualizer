@@ -70,7 +70,7 @@ CallMonitor
 //}
 
 void
-CallMonitor::Push( MonitorOption op, const char* szCallee )
+CallMonitor::Push( MonitorOption op, const char* szCallee, const char* szCaller )
 {
 	if (NULL == szCallee)
 	{
@@ -83,6 +83,7 @@ CallMonitor::Push( MonitorOption op, const char* szCallee )
 	ctx.level = m_stSym.size();
 	ctx.mop = op;
 	ctx.pipe = &pipe;
+	ctx.caller = szCaller;
 
 	if (pProfiler) pProfiler->Push(ctx);
 	if (pStack) pStack->Push(ctx);

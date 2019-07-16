@@ -11,55 +11,32 @@ extern "C" void _hexit();
 extern "C" void PushVal(UINT64 val);
 extern "C" UINT64 PopVal();
 
-extern "C" void _dummy_alarmRegist();
+extern "C" void _dummy_alarmRegist1();
+extern "C" void _dummy_alarmRegist2();
 
-static SpinLock spin;
-static std::map<DWORD, std::stack<UINT64> > stMap;
-//static DWORD tlsSlot = 0xFFFFFFFF;
+static DWORD tlsSlot = 0xFFFFFFFF;
 
 void PushVal(UINT64 val)
 {
-	spin.lock();
-
-	DWORD tid = GetCurrentThreadId();
-	const auto& iter = stMap.find(tid);
-	if (iter == stMap.end())
+	if (tlsSlot == 0xFFFFFFFF)
+		tlsSlot = TlsAlloc();
+	
+	auto * asmSt = (std::stack< UINT64 >*)TlsGetValue(tlsSlot);
+	if (nullptr == asmSt)
 	{
-		std::stack<UINT64> st;
-		st.emplace(val);
-		stMap.emplace(tid, st);
+		asmSt = new std::stack< UINT64 >();
+		TlsSetValue(tlsSlot, asmSt);
 	}
-	else
-	{
-		(*iter).second.emplace(val);
-	}
-	//if (tlsSlot == 0xFFFFFFFF)
-	//	tlsSlot = TlsAlloc();
-	//
-	//auto * asmSt = (std::stack< UINT64 >*)TlsGetValue(tlsSlot);
-	//if (nullptr == asmSt)
-	//{
-	//	asmSt = new std::stack< UINT64 >();
-	//	TlsSetValue(tlsSlot, asmSt);
-	//}
-	//
-	//asmSt->push(val);
+	
+	asmSt->push(val);
 
-	spin.unlock();
 }
 
 UINT64 PopVal()
 {
-	spin.lock();
+	auto * asmSt = (std::stack< UINT64 >*)TlsGetValue(tlsSlot);
+	UINT64 ret = asmSt->top();
+	asmSt->pop();
 
-	DWORD tid = GetCurrentThreadId();
-	std::stack<UINT64>& st = stMap[tid];
-	UINT64 ret = st.top();
-	st.pop();
-	//auto * asmSt = (std::stack< UINT64 >*)TlsGetValue(tlsSlot);
-	//UINT64 ret = asmSt->top();
-	//asmSt->pop();
-
-	spin.unlock();
 	return ret;
 }

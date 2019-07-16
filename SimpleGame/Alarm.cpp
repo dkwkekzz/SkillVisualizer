@@ -32,7 +32,10 @@ Alarm::Regist( IObserver * pObserver, IValue * pValue, CUINT64 ullTick, CBOOL sk
 const Handle
 Alarm::Regist( IObserver * pObserver, IValue * pValue, CUINT64 ullTick, Task * task, CBOOL skipLog )
 {
+	This->m.lock();
 	std::cout << "@@Regist2" << std::endl;
+	This->ob = pObserver;
+	This->m.unlock();
 	return Handle();
 }
 

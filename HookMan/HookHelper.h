@@ -7,7 +7,7 @@
 //
 
 extern "C" void* GetOriginal(void * p);
-extern "C" void ProcEnter(void* pa, void* pth);
+extern "C" void ProcEnter(void* pth, void* paddr);
 extern "C" void ProcExit(unsigned long long ret);
 
 extern "C" bool Collect(std::wostream& ofile, const char* fileName);
@@ -24,5 +24,6 @@ void HookClose();
 // specialize
 //
 
-extern "C" void CollectSpecialized(std::wostream& ofile);
-extern "C" void* GetAlarmRegist(void * pth, void * pob);
+//extern "C" void CollectSpecialized(std::wostream& ofile);
+extern "C" void* GetAlarmRegist1(void * pth, void * pa, void * pb);
+extern "C" void* GetAlarmRegist2(void * pth, void * pa, void * pb);
