@@ -13,32 +13,19 @@ public:
 private:
 	struct ProfileInfo
 	{
-		ProfileInfo()
-		{
-			bFilled = false;
-		}
-
-		//Name of the function
-		char	m_sFunName[256];
-
-		//Thread executig the function
-		DWORD   m_dwThreadID;
-
 		//Start time
 		LARGE_INTEGER	m_liStartTime;
 
-		//End time
-		LARGE_INTEGER	m_liEndTime;
+		//elapsed time
+		LARGE_INTEGER	m_liElapsedTime;
 
-		bool	bFilled;
-
-		void Display(std::ostream& os);
+		int overlap;
 	};
 
 	void DisplayProfileData();
 
 private:
-	static std::map<int, vector<ProfileInfo> > g_mapProfileInfo;
+	static std::map<int, map<std::string, ProfileInfo> > g_mapProfileInfo;
 
 	bool m_run { true };
 

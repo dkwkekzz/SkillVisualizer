@@ -7,7 +7,7 @@
 // static
 //
 
-std::map<int, vector<Profiler::ProfileInfo> > Profiler::g_mapProfileInfo;
+std::map<int, map<std::string, Profiler::ProfileInfo> > Profiler::g_mapProfileInfo;
 static SpinLock sync;
 
 
@@ -30,26 +30,37 @@ Profiler::Push(const MonitorContext& ctx)
 	if (!m_run)
 		return;
 
-	ProfileInfo profInfo;
-	strcpy(profInfo.m_sFunName, ctx.callee);
-
-	QueryPerformanceCounter(&profInfo.m_liStartTime);
-
-	DWORD tid = ::GetCurrentThreadId();
-	profInfo.m_dwThreadID = tid;
-
 	sync.Enter();
 
-	map<int, vector<ProfileInfo> >::iterator itTID = g_mapProfileInfo.find(tid);
-	if (itTID != g_mapProfileInfo.end())
+	DWORD tid = ::GetCurrentThreadId();
+	if (g_mapProfileInfo.count(tid) == 0)
 	{
-		itTID->second.push_back(profInfo);
+		map<std::string, Profiler::ProfileInfo> mapInst;
+		g_mapProfileInfo.emplace(tid, mapInst);
+	}
+
+	const auto& itMap = g_mapProfileInfo.find(tid);
+	auto& mapProfInfo = (*itMap).second;
+	const auto& itProfInfo = mapProfInfo.find(ctx.callee);
+	if (itProfInfo != mapProfInfo.end())
+	{
+		auto& infoPair = *itProfInfo;
+		ProfileInfo& info = infoPair.second;
+
+		QueryPerformanceCounter(&info.m_liStartTime);
+
+		info.overlap++;
 	}
 	else
 	{
-		vector<ProfileInfo> vecProfInfo;
-		vecProfInfo.push_back(profInfo);
-		g_mapProfileInfo.insert(make_pair(tid, vecProfInfo));
+		ProfileInfo profInfo;
+
+		QueryPerformanceCounter(&profInfo.m_liStartTime);
+
+		profInfo.m_liElapsedTime.QuadPart = 0;
+		profInfo.overlap = 1;
+
+		mapProfInfo.emplace(ctx.callee, profInfo);
 	}
 
 	sync.Leave();
@@ -64,24 +75,24 @@ Profiler::Pop(const MonitorContext& ctx)
 	sync.Enter();
 
 	DWORD tid = ::GetCurrentThreadId();
-	map<int, vector<ProfileInfo> >::iterator itTID = g_mapProfileInfo.find(tid);
-	if (itTID != g_mapProfileInfo.end())
+	if (g_mapProfileInfo.count(tid) == 0)
 	{
-		vector<ProfileInfo>	&vecProfileInfo = itTID->second;
-		vector<ProfileInfo>::iterator it = vecProfileInfo.end();
-		--it;
-		while (1)
-		{
-			if (strcmp(it->m_sFunName, ctx.callee) == 0 && (!it->bFilled))
-			{
-				QueryPerformanceCounter(&it->m_liEndTime);
-				it->bFilled = true;
-				break;
-			}
-			if (it == vecProfileInfo.begin())
-				break;
-			--it;
-		}
+		map<std::string, Profiler::ProfileInfo> mapInst;
+		g_mapProfileInfo.emplace(tid, mapInst);
+	}
+
+	const auto& itMap = g_mapProfileInfo.find(tid);
+	auto& mapProfInfo = (*itMap).second;
+	const auto& itProfInfo = mapProfInfo.find(ctx.callee);
+	if (itProfInfo != mapProfInfo.end())
+	{
+		auto& infoPair = *itProfInfo;
+		ProfileInfo& info = infoPair.second;
+
+		LARGE_INTEGER endTime;
+		QueryPerformanceCounter(&endTime);
+
+		info.m_liElapsedTime.QuadPart += endTime.QuadPart - info.m_liStartTime.QuadPart;
 	}
 
 	sync.Leave();
@@ -117,15 +128,27 @@ Profiler::DisplayProfileData()
 	std::ofstream os("ProfileData.csv");
 
 	os << "##########################Profile Information############################" << endl;
-	os << "Thread" << ',' << "Function" << ',' << "Elapsed" << endl;
-	map<int, vector<ProfileInfo> >::iterator itThread = g_mapProfileInfo.begin();
+	os << "Thread" << ',' << "Function" << ',' << "Elapsed" << ',' << "Overlap" << endl;
+	map<int, map<std::string, Profiler::ProfileInfo> >::iterator itThread = g_mapProfileInfo.begin();
 	for (; itThread != g_mapProfileInfo.end(); ++itThread)
 	{
-		vector<ProfileInfo> &vecProfileInfo = itThread->second;
-		vector<ProfileInfo>::iterator it = vecProfileInfo.begin();
+		DWORD tid = (*itThread).first;
+
+		map<std::string, Profiler::ProfileInfo> &vecProfileInfo = itThread->second;
+		map<std::string, Profiler::ProfileInfo>::iterator it = vecProfileInfo.begin();
 		for (; it != vecProfileInfo.end(); ++it)
 		{
-			it->Display(os);
+			const std::string& funcName = (*it).first;
+
+			const ProfileInfo& info = (*it).second;
+
+			//Number of ticks-per-sec
+			LARGE_INTEGER freq;
+			QueryPerformanceFrequency(&freq);
+
+			const auto& elapsed = (info.m_liElapsedTime.QuadPart) * 1000 * 1000 / freq.QuadPart;
+
+			os << tid << ',' << funcName << ',' << elapsed << ',' << info.overlap << endl;
 		}
 	}
 
@@ -136,21 +159,3 @@ Profiler::DisplayProfileData()
 
 	sync.Leave();
 }
-
-//*******************************************************************************
-void
-Profiler::ProfileInfo::Display(std::ostream& os)
-{
-	//Number of ticks
-	LARGE_INTEGER elapsedTime;
-	elapsedTime.QuadPart = m_liEndTime.QuadPart - m_liStartTime.QuadPart;
-
-	//Number of ticks-per-sec
-	LARGE_INTEGER freq;
-	QueryPerformanceFrequency(&freq);
-
-	elapsedTime.QuadPart = (elapsedTime.QuadPart) * 1000 * 1000 / freq.QuadPart;
-
-	os << m_dwThreadID << ',' << m_sFunName << ',' << elapsedTime.QuadPart << endl;
-}
-//*******************************************************************************

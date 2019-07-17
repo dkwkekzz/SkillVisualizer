@@ -128,7 +128,7 @@ void* GetAlarmRegist1(void * pth, void * pa, void * pb)
 	const char* callee = CurrentSymbol();
 	if (nullptr != callee)
 	{
-		std::cout << "GetAlarmRegist1 from: " << callee << std::endl;
+		//std::cout << "GetAlarmRegist1 from: " << callee << std::endl;
 		auto * dupCallee = new char[strlen(callee) + 1];
 		strcpy(dupCallee, callee);
 		linkMap.emplace(pb, dupCallee);
@@ -142,7 +142,7 @@ void* GetAlarmRegist2(void * pth, void * pa, void * pb)
 	const char* callee = CurrentSymbol();
 	if (nullptr != callee)
 	{
-		std::cout << "GetAlarmRegist2 from: " << callee << std::endl;
+		//std::cout << "GetAlarmRegist2 from: " << callee << std::endl;
 		auto * dupCallee = new char[strlen(callee) + 1];
 		strcpy(dupCallee, callee);
 		linkMap.emplace(pb, dupCallee);

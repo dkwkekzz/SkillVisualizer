@@ -7,6 +7,7 @@
 #include "Static.h"
 #include "Alarm.h"
 #include "masm.h"
+#include "IValue.h"
 #include <mutex>
 #include <thread>
 
@@ -98,6 +99,10 @@ void testwork2()
 	}
 }
 
+Suite::Module::Toolkit::NFetch::NFlyweight::Index idx("power");
+Suite::Module::Toolkit::NFetch::NFlyweight::Integer64 i64("world");
+
+
 int main()
 {
 	//test();
@@ -110,7 +115,8 @@ int main()
 	archer player;
 	queue<monster> monque;
 
-
+	auto a = idx.Get();
+	auto b = i64.Get();
 	//alarm.Regist(&inst, nullptr, 0);
 
 	//inst.OnAlarm(999);
